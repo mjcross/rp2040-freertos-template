@@ -4,8 +4,6 @@ This is a template project for developing FreeRTOS based applications on Raspber
 Unmodified, this project will spawn a single task to rapidly blink the LED on and off.
 
 ## Build environment
-As downloaded the project includes a freestanding copy of the FreeRTOS kernel. That's good for a quick start but probably isn't what you want for a production environment. 
+The project now uses a shared copy of the FreeRTOS kernel, at `FREERTOS_KERNEL_PATH` in the top level *CMakeLists.txt*.
 
-To use a shared copy of the kernel, change `FREERTOS_KERNEL_PATH` in the top level *CMakeLists.txt*.
-
-I've added a *.vscode* folder to configure the project to use **PicoProbe**.
+The *.vscode* folder configures the project to use **PicoProbe**.
