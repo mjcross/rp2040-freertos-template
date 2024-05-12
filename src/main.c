@@ -1,28 +1,45 @@
-#include "FreeRTOS.h"
-#include "task.h"
+// From the "Learn Embedded Systems" FreeRTOS SMP Tutorial:
+// https://learnembeddedsystems.co.uk/freertos-smp-tutorial
+
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "pico/multicore.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "semphr.h"
 
+const int task_delay = 500;
+const int task_size = 128;
 
-void led_task()
-{   
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    while (true) {
-        gpio_put(LED_PIN, 1);
-        vTaskDelay(100);
-        gpio_put(LED_PIN, 0);
-        vTaskDelay(100);
+SemaphoreHandle_t toggle_sem;
+
+void vTaskSMP_demo_delay(void *pvParameters){
+
+    for (;;) {
+        xSemaphoreGive(toggle_sem);
+        vTaskDelay(task_delay);
+    }
+
+}
+
+void vTaskSMP_demo_led(void *pvParameters){
+
+    for (;;) {
+        if(xSemaphoreTake(toggle_sem, portMAX_DELAY)){
+            gpio_put(25, !gpio_get_out_level(25));
+        }
     }
 }
 
-int main()
-{
+void main(){
     stdio_init_all();
 
-    xTaskCreate(led_task, "LED_Task", 256, NULL, 1, NULL);
-    vTaskStartScheduler();
+    gpio_init(25);
+    gpio_set_dir(25,1);
 
-    while(1){};
+    toggle_sem = xSemaphoreCreateBinary();
+
+    xTaskCreate(vTaskSMP_demo_delay, "A", task_size, NULL, 1, NULL);
+    xTaskCreate(vTaskSMP_demo_led, "B", task_size, NULL, 1, NULL);
+    vTaskStartScheduler();
 }

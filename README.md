@@ -1,9 +1,24 @@
 # rp2040-freertos-template
-This is a template project for developing FreeRTOS based applications on Raspberry Pi RP2040 based boards. This template uses the "official" RP2040 port from the Raspberry Pi Foundation. My previous repo used the generic Cortex M0 port so this one corrects that. Previous Repo retained as tutorials rely on it. 
+This is a template project for developing FreeRTOS based applications on the Raspberry Pi RP2040.
 
-Unmodified, this project will spawn a single task to rapidly blink the LED on and off.
+To use both cores change `configNUMBER_OF_CORES` to 2 in *FreeRTOSConfig.h*
 
-## Build environment
-The project now uses a shared copy of the FreeRTOS kernel, at `FREERTOS_KERNEL_PATH` in the top level *CMakeLists.txt*.
+Unmodified the project will spawn a single task to rapidly blink the LED on and off.
 
-The *.vscode* folder configures the project to use **PicoProbe**.
+The *.vscode* folder configures the IDE to use **PicoProbe**.
+
+## FreeRTOS kernel
+
+The project uses an external copy of the FreeRTOS kernel, in the location defined by `FREERTOS_KERNEL_PATH` in the top level *CMakeLists.txt*.
+
+### To install the kernel if you don't already have it
+```sh
+$ cd <some_target_directory>
+$ git clone -b smp https://github.com/FreeRTOS/FreeRTOS-Kernel --recurse-submodules
+```
+
+### To update a previously downloaded kernel
+```sh
+$ cd <some_target_directory>/FreeRTOS-Kernel
+$ git pull
+```
