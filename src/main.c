@@ -15,7 +15,7 @@ SemaphoreHandle_t toggle_sem;
 
 void vTaskSMP_demo_delay(void *pvParameters){
 
-    for (;;) {
+    while(true) {
         xSemaphoreGive(toggle_sem);
         vTaskDelay(task_delay);
     }
@@ -24,7 +24,7 @@ void vTaskSMP_demo_delay(void *pvParameters){
 
 void vTaskSMP_demo_led(void *pvParameters){
 
-    for (;;) {
+    while(true) {
         if(xSemaphoreTake(toggle_sem, portMAX_DELAY)){
             gpio_put(25, !gpio_get_out_level(25));
         }
