@@ -39,7 +39,15 @@ void main(){
 
     toggle_sem = xSemaphoreCreateBinary();
 
-    xTaskCreate(vTaskSMP_demo_delay, "A", task_size, NULL, 1, NULL);
-    xTaskCreate(vTaskSMP_demo_led, "B", task_size, NULL, 1, NULL);
+    // create tasks
+    TaskHandle_t delay_task_handle, led_task_handle;
+    xTaskCreate(vTaskSMP_demo_delay, "A", task_size, NULL, 1, &delay_task_handle);
+    xTaskCreate(vTaskSMP_demo_led, "B", task_size, NULL, 1, &led_task_handle);
+
+    // pin each task to a different core
+    vTaskCoreAffinitySet(delay_task_handle, 0b01);    // pin 'delay' task to core 0
+    vTaskCoreAffinitySet(led_task_handle, 0b10);      // pin 'led' task to core 1
+
+    // start tasks running
     vTaskStartScheduler();
 }

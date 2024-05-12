@@ -1,8 +1,9 @@
 # rp2040-freertos-template
 This is a template project for developing FreeRTOS based applications on the Raspberry Pi RP2040.
 
-The example is a simple LED blinky using two tasks synchronised by a semaphore.
-It uses both cores by setting `configNUMBER_OF_CORES 2` in *FreeRTOSConfig.h*.
+The example is a simple LED blinky using two tasks synchronised by a one-bit semaphore.
+
+It uses both cores by setting `configNUMBER_OF_CORES 2` in *FreeRTOSConfig.h*, and in the example each task is pinned to a different core.
 
 The *.vscode* folder configures the IDE to use **PicoProbe**.
 
